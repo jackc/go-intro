@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"time"
 )
 
 var opts struct {
@@ -68,6 +69,8 @@ func main() {
 		go consumeRequests(requestChan, resultChan)
 	}
 
+	startTime := time.Now()
+
 	go produceRequests(requestChan, target, opts.NumRequests)
 
 	// Gather results
@@ -83,7 +86,11 @@ func main() {
 		}
 	}
 
+	duration := time.Since(startTime)
+	requestsPerSecond := float64(successCount) / duration.Seconds()
+
 	// Output results
 	fmt.Printf("# Success: %v\n", successCount)
 	fmt.Printf("# Failure: %v\n", failureCount)
+	fmt.Printf("%v requests/second\n", requestsPerSecond)
 }
