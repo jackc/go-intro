@@ -12,6 +12,21 @@ var opts struct {
 	NumRequests int `short:"r" long:"num-requests" description:"Number of requests to make" default:"1"`
 }
 
+func doRequest(target string) error {
+	response, err := http.Get(target)
+	if err != nil {
+		return err
+	}
+	defer response.Body.Close()
+
+	_, err = io.Copy(os.Stdout, response.Body)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func main() {
 	var err error
 	var args []string
@@ -30,17 +45,9 @@ func main() {
 	target := args[0]
 
 	for i := 0; i < opts.NumRequests; i++ {
-		response, err := http.Get(target)
+		err := doRequest(target)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-			os.Exit(1)
-		}
-		defer response.Body.Close()
-
-		_, err = io.Copy(os.Stdout, response.Body)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-			os.Exit(1)
 		}
 	}
 }
