@@ -4,28 +4,30 @@ import (
 	"fmt"
 	"github.com/jessevdk/go-flags"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
-	"time"
 )
 
 var opts struct {
 	NumRequests int `short:"r" long:"num-requests" description:"Number of requests to make" default:"1"`
 }
 
-func doRequest(target string) error {
+func doRequest(target string, resultChan chan (error)) {
 	response, err := http.Get(target)
 	if err != nil {
-		return err
+		resultChan <- err
+		return
 	}
 	defer response.Body.Close()
 
-	_, err = io.Copy(os.Stdout, response.Body)
+	_, err = io.Copy(ioutil.Discard, response.Body)
 	if err != nil {
-		return err
+		resultChan <- err
+		return
 	}
 
-	return nil
+	resultChan <- nil
 }
 
 func main() {
@@ -45,9 +47,24 @@ func main() {
 
 	target := args[0]
 
+	resultChan := make(chan (error))
+
 	for i := 0; i < opts.NumRequests; i++ {
-		go doRequest(target)
+		go doRequest(target, resultChan)
 	}
 
-	time.Sleep(time.Second)
+	successCount := 0
+	failureCount := 0
+
+	for i := 0; i < opts.NumRequests; i++ {
+		result := <-resultChan
+		if result == nil {
+			successCount++
+		} else {
+			failureCount++
+		}
+	}
+
+	fmt.Printf("# Success: %v\n", successCount)
+	fmt.Printf("# Failure: %v\n", failureCount)
 }
