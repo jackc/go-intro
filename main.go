@@ -11,6 +11,20 @@ import (
 
 var opts struct {
 	NumRequests int `short:"r" long:"num-requests" description:"Number of requests to make" default:"1"`
+	Concurrent  int `short:"c" long:"concurrent" description:"Number of concurrent connections to make" default:"1"`
+}
+
+func produceRequests(requestChan chan (string), target string, numRequests int) {
+	for i := 0; i < numRequests; i++ {
+		requestChan <- target
+	}
+	close(requestChan)
+}
+
+func consumeRequests(requestChan chan (string), resultChan chan (error)) {
+	for target := range requestChan {
+		doRequest(target, resultChan)
+	}
 }
 
 func doRequest(target string, resultChan chan (error)) {
@@ -45,14 +59,18 @@ func main() {
 		return
 	}
 
+	// Kick off workers
 	target := args[0]
-
+	requestChan := make(chan (string))
 	resultChan := make(chan (error))
 
-	for i := 0; i < opts.NumRequests; i++ {
-		go doRequest(target, resultChan)
+	for i := 0; i < opts.Concurrent; i++ {
+		go consumeRequests(requestChan, resultChan)
 	}
 
+	go produceRequests(requestChan, target, opts.NumRequests)
+
+	// Gather results
 	successCount := 0
 	failureCount := 0
 
@@ -65,6 +83,7 @@ func main() {
 		}
 	}
 
+	// Output results
 	fmt.Printf("# Success: %v\n", successCount)
 	fmt.Printf("# Failure: %v\n", failureCount)
 }
