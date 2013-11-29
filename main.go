@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"time"
 )
 
 var opts struct {
@@ -45,9 +46,8 @@ func main() {
 	target := args[0]
 
 	for i := 0; i < opts.NumRequests; i++ {
-		err := doRequest(target)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		}
+		go doRequest(target)
 	}
+
+	time.Sleep(time.Second)
 }
