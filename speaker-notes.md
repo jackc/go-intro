@@ -80,7 +80,7 @@ Go is designed to be used, not as an academic exercise.
 # Go's Learn Something Reasons
 
 * Pointers
-* Possibly channels, but they would be hard to use elsewhere without language support
+* Possibly channels, but they could be hard to use elsewhere without language support (see Queue for nearest Ruby equivalent)
 
 # Negatives for Go
 
