@@ -1,24 +1,24 @@
-= Intro
+# Intro
 
 Why learn a programming language?
 
 * To use it
 * To learn something and take it back to another language
 
-= s1 - Hello, World!
+# s1 - Hello, World!
 
 * package
 * import / namespace
 * func main
 * case determines visibility
 
-= s2 - Command line arguments
+# s2 - Command line arguments
 
 * Println can use reflection to print non-string arguments
 * Slices - slice of an arrays
 * Demonstrate auto-format
 
-= s3 - curl
+# s3 - curl
 
 * Initialization assignment - type inferance
 * Multiple returns
@@ -28,7 +28,7 @@ Why learn a programming language?
 * io.Copy - discuss reader and writer interfaces
 * Remember to start sinatra hello world app
 
-= s4 - Multiple requests
+# s4 - Multiple requests
 
 * External packages
 * var keyword
@@ -36,33 +36,33 @@ Why learn a programming language?
 * single use struct instead of defining a type
 * for loop - only loop construct
 
-= s5 - Extract doRequest
+# s5 - Extract doRequest
 
 * Note repetitive if err != nil
 * Demonstrate no warnings / only errors
 * Demonstrate IDE like auto-complete
 
-= s6 - Concurrent requests
+# s6 - Concurrent requests
 
 * Go routines
 ** Light-weight "threads" multiplexed on real threads
 ** Return value is lost
 ** No communication back from go routines makes sleep necessary
 
-= s7 - Channels
+# s7 - Channels
 
 * Channels are the concurrent safe means for go routines to communicate
 
-= s8 - More channels
+# s8 - More channels
 
 * Use channels to provide input and give output
 * Control how many simultaneous requests in progress at once
 
-= s9 - Add timing
+# s9 - Add timing
 
 * Add sleep to sinatra to demonstrate that concurrency is working
 
-= Go's Use It Reasons
+# Go's Use It Reasons
 
 Go is designed to be used, not as an academic exercise.
 
@@ -77,12 +77,12 @@ Go is designed to be used, not as an academic exercise.
 * Simple
 * Static duck typing
 
-= Go's Learn Something Reasons
+# Go's Learn Something Reasons
 
 * Pointers
 * Possibly channels, but they would be hard to use elsewhere without language support
 
-= Negatives for Go
+# Negatives for Go
 
 * No REPL
 * Verbose error handling / mixed blessing
